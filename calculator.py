@@ -48,8 +48,6 @@ def add(*args):
     return str(result)
 
 
-
-# TODO: Add functions for handling more arithmetic operations.
 def subtract(*args):
     result = int(args[0]) - int(args[1])
     return str(result)
@@ -65,13 +63,36 @@ def divide(*args):
     return str(result)
 
 
+def instructions():
+  return """
+<head>
+<title>Instructions</title>
+</head>
+<body>
+<h1><u>Instructions</u></h1>
+<p>
+You can preform basic addition, subtraction, multiplication, and division by<br>
+modifing the end of the URL. Include 'add', 'subtract', 'multiply', or 'divide',<br>
+'/', followed by two numbers, also seperated with a forward slash.<br>
+See below for examples.<br>
+</p>
+<p>Examples:</p>
+<p>
+  http://localhost:8080/multiply/3/5  => 15<br>
+  http://localhost:8080/add/23/42  => 65<br>
+  http://localhost:8080/subtract/23/42  => -19<br>
+  http://localhost:8080/divide/22/11  => 2<br>
+  http://localhost:8080/ => instructions page (here)<br>
+</p>
+</body>
+"""
+
 def resolve_path(path):
     """
-    Should return two values: a callable and an iterable of
-    arguments.
+    Should return two values: a callable and an iterable of arguments.
     """
     funcs = {
-        #'': instructions,
+        '': instructions,
         'add': add,
         'subtract': subtract,
         'multiply': multiply,
@@ -121,6 +142,9 @@ def application(environ, start_response):
     except NameError:
         status = "404 Not Found"
         body = "<h1>Not Found</h1>"
+    except ZeroDivisionError:
+        status = "500 Internal Server Error"
+        body = "<h1>Attempt to divide by zero Error</h1>"
     except Exception:
         status = "500 Internal Server Error"
         body = "<h1>Internal Server Error</h1>"
